@@ -20,7 +20,7 @@ https://natsuken7199.github.io/unfriendly-open-letter-to-left-and-right-wing-rel
 
 ## Version
 
-v1.0
+v1.0 (현재 오탈자 존재, 추후에 개정판 업로드 예정)
 
 ---
 
