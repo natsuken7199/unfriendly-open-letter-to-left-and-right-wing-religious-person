@@ -1,2 +1,9 @@
-# unfriendly-open-letter-to-left-and-right-wing-religious-person
-좌우익 종교인을 향한 불친절한 공개서한 PDF
+# 좌우익 종교인을 향한 불친절한 공개서한
+
+암흑망(暗黑網)
+
+정치·종교·문명에 대한 선언적 에세이 PDF.
+
+## Download
+
+- PDF
