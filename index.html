@@ -62,6 +62,8 @@
 
       width: 100%;
       height: auto;
+
+      background: white;
     }
 
     @media (max-width: 768px) {
@@ -80,8 +82,8 @@
 
   </style>
 
-  <!-- pdf.js -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+  <!-- 안정적인 pdf.js 버전 -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
 
 </head>
 
@@ -92,7 +94,7 @@
   <script>
 
     pdfjsLib.GlobalWorkerOptions.workerSrc =
-      'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+      'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.min.js';
 
     const url =
       './unfriendly_open_letter_to_left_and_right_wing_religious_person.pdf';
@@ -102,8 +104,18 @@
 
     async function renderPDF() {
 
+      const loadingTask =
+        pdfjsLib.getDocument({
+
+          url: url,
+
+          useSystemFonts: true,
+          disableFontFace: false
+
+        });
+
       const pdf =
-        await pdfjsLib.getDocument(url).promise;
+        await loadingTask.promise;
 
       for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
 
@@ -138,7 +150,11 @@
           document.createElement('canvas');
 
         const context =
-          canvas.getContext('2d');
+          canvas.getContext('2d', {
+
+            alpha: false
+
+          });
 
         canvas.width =
           scaledViewport.width;
@@ -150,12 +166,19 @@
 
         container.appendChild(wrapper);
 
-        await page.render({
+        const renderContext = {
 
           canvasContext: context,
-          viewport: scaledViewport
 
-        }).promise;
+          viewport: scaledViewport,
+
+          enableWebGL: false,
+
+          renderInteractiveForms: false
+
+        };
+
+        await page.render(renderContext).promise;
       }
     }
 
