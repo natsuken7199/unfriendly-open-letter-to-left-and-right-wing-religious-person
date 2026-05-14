@@ -2,8 +2,12 @@
 <html lang="ko">
 
 <head>
+
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0">
 
   <title>
     좌우익 종교인을 향한 불친절한 공개서한
@@ -28,82 +32,101 @@
       align-items: center;
     }
 
+    .page {
+
+      margin: 16px 0;
+      box-shadow: 0 0 10px rgba(0,0,0,.5);
+      background: white;
+    }
+
     canvas {
 
       display: block;
-
-      width: 95%;
+      width: 100%;
       height: auto;
-
-      margin: 16px auto;
-
-      background: white;
-
-      box-shadow: 0 0 10px rgba(0,0,0,.5);
     }
 
   </style>
+
+  <!-- pdf.js classic build -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+
 </head>
 
 <body>
 
   <div id="pdf-container"></div>
 
-  <script type="module">
-
-    import * as pdfjsLib from
-      'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.min.mjs';
+  <script>
 
     pdfjsLib.GlobalWorkerOptions.workerSrc =
-      'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.worker.min.mjs';
+      'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
 
     const url =
-      'unfriendly_open_letter_to_left_and_right_wing_religious_person.pdf';
-
-    const pdf = await pdfjsLib.getDocument(url).promise;
+      './unfriendly_open_letter_to_left_and_right_wing_religious_person.pdf';
 
     const container =
       document.getElementById('pdf-container');
 
-    for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+    async function renderPDF() {
 
-      const page = await pdf.getPage(pageNum);
+      const pdf =
+        await pdfjsLib.getDocument(url).promise;
 
-      const viewport =
-        page.getViewport({ scale: 1.5 });
+      for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
 
-      const desiredWidth =
-        window.innerWidth * 0.95;
+        const page =
+          await pdf.getPage(pageNum);
 
-      const scale =
-        desiredWidth / viewport.width;
+        const viewport =
+          page.getViewport({ scale: 1 });
 
-      const scaledViewport =
-        page.getViewport({ scale });
+        const desiredWidth =
+          Math.min(window.innerWidth * 0.95, 1000);
 
-      const canvas =
-        document.createElement('canvas');
+        const scale =
+          desiredWidth / viewport.width;
 
-      const context =
-        canvas.getContext('2d');
+        const scaledViewport =
+          page.getViewport({ scale });
 
-      canvas.width =
-        scaledViewport.width;
+        const wrapper =
+          document.createElement('div');
 
-      canvas.height =
-        scaledViewport.height;
+        wrapper.className = 'page';
 
-      container.appendChild(canvas);
+        const canvas =
+          document.createElement('canvas');
 
-      await page.render({
+        const context =
+          canvas.getContext('2d');
 
-        canvasContext: context,
-        viewport: scaledViewport
+        canvas.width =
+          scaledViewport.width;
 
-      }).promise;
+        canvas.height =
+          scaledViewport.height;
+
+        wrapper.style.width =
+          scaledViewport.width + 'px';
+
+        wrapper.appendChild(canvas);
+
+        container.appendChild(wrapper);
+
+        await page.render({
+
+          canvasContext: context,
+          viewport: scaledViewport
+
+        }).promise;
+      }
     }
+
+    renderPDF();
 
   </script>
 
 </body>
+
 </html>
