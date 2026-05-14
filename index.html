@@ -21,170 +21,31 @@
       margin: 0;
       padding: 0;
 
-      background: #444;
-
-      font-family:
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        sans-serif;
-    }
-
-    #pdf-container {
-
       width: 100%;
-
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-
-      padding:
-        32px 0 64px 0;
-    }
-
-    .page {
-
-      margin: 32px 0;
-
-      background: white;
-
-      box-shadow:
-        0 4px 20px rgba(0,0,0,.25);
-
-      border-radius: 4px;
+      height: 100%;
 
       overflow: hidden;
+
+      background: #222;
     }
 
-    canvas {
+    iframe {
 
-      display: block;
+      border: none;
 
       width: 100%;
-      height: auto;
-
-      background: white;
-    }
-
-    @media (max-width: 768px) {
-
-      #pdf-container {
-
-        padding:
-          12px 0 32px 0;
-      }
-
-      .page {
-
-        margin: 12px 0;
-      }
+      height: 100vh;
     }
 
   </style>
-
-  <!-- 안정적인 pdf.js 버전 -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
 
 </head>
 
 <body>
 
-  <div id="pdf-container"></div>
-
-  <script>
-
-    pdfjsLib.GlobalWorkerOptions.workerSrc =
-      'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.min.js';
-
-    const url =
-      './unfriendly_open_letter_to_left_and_right_wing_religious_person.pdf';
-
-    const container =
-      document.getElementById('pdf-container');
-
-    async function renderPDF() {
-
-      const loadingTask =
-        pdfjsLib.getDocument({
-
-          url: url,
-
-          useSystemFonts: true,
-          disableFontFace: false
-
-        });
-
-      const pdf =
-        await loadingTask.promise;
-
-      for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
-
-        const page =
-          await pdf.getPage(pageNum);
-
-        const viewport =
-          page.getViewport({ scale: 1 });
-
-        const isMobile =
-          window.innerWidth < 768;
-
-        const desiredWidth = isMobile
-          ? window.innerWidth * 0.92
-          : 794;
-
-        const scale =
-          desiredWidth / viewport.width;
-
-        const scaledViewport =
-          page.getViewport({ scale });
-
-        const wrapper =
-          document.createElement('div');
-
-        wrapper.className = 'page';
-
-        wrapper.style.width =
-          scaledViewport.width + 'px';
-
-        const canvas =
-          document.createElement('canvas');
-
-        const context =
-          canvas.getContext('2d', {
-
-            alpha: false
-
-          });
-
-        canvas.width =
-          scaledViewport.width;
-
-        canvas.height =
-          scaledViewport.height;
-
-        wrapper.appendChild(canvas);
-
-        container.appendChild(wrapper);
-
-        const renderContext = {
-
-          canvasContext: context,
-
-          viewport: scaledViewport,
-
-          enableWebGL: false,
-
-          renderInteractiveForms: false
-
-        };
-
-        await page.render(renderContext).promise;
-      }
-    }
-
-    renderPDF();
-
-  </script>
+  <iframe
+    src="https://mozilla.github.io/pdf.js/web/viewer.html?file=https://natsuken7199.github.io/unfriendly-open-letter-to-left-and-right-wing-religious-person/unfriendly_open_letter_to_left_and_right_wing_religious_person.pdf">
+  </iframe>
 
 </body>
 
